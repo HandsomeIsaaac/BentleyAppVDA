@@ -5,7 +5,7 @@
 
 import "./App.scss";
 
-import type { ScreenViewport } from "@itwin/core-frontend";
+import type { IModelConnection, ScreenViewport } from "@itwin/core-frontend";
 import { FitViewTool, IModelApp, StandardViewId } from "@itwin/core-frontend";
 import { FillCentered } from "@itwin/core-react";
 import { ProgressLinear } from "@itwin/itwinui-react";
@@ -136,6 +136,15 @@ const App: React.FC = () => {
     MeasurementActionToolbar.setDefaultActionProvider();
   }, []);
 
+  const onIModelConnected = (_imodel: IModelConnection) => {
+    console.log("iModel connected");
+
+    IModelApp.viewManager.onViewOpen.addOnce((vp: ScreenViewport) => {
+      vp.changeCategoryDisplay();
+
+      
+  });
+
   return (
     <div className="viewer-container">
       {!accessToken && (
@@ -150,6 +159,8 @@ const App: React.FC = () => {
         iModelId={iModelId ?? ""}
         changeSetId={changesetId}
         authClient={authClient}
+        onIModelConnected={onIModelConnected}
+
         viewCreatorOptions={viewCreatorOptions}
         enablePerformanceMonitors={true} // see description in the README (https://www.npmjs.com/package/@itwin/web-viewer-react)
         onIModelAppInit={onIModelAppInit}
